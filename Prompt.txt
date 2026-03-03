@@ -1,0 +1,46 @@
+请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。 以下是供参考的Mermaid代码:
+flowchart TB
+    %% 前端层
+    subgraph "前端层 - 微信小程序/uni-app"
+        direction TB
+        UI["交互展示模块<br/>政策检索、智能问答、分类展示"]
+        FE_LOGIC["业务逻辑模块<br/>检索解析、问答管理、操作记录"]
+        API_ADAPT["接口适配模块<br/>请求封装、响应解析、异常处理"]
+    end
+
+    %% 后端层
+    subgraph "后端层 - Supabase BaaS"
+        direction TB
+        DATA_SERVICE["数据服务模块<br/>政策数据、用户数据、日志管理"]
+        BE_LOGIC["业务逻辑模块<br/>政策管理、智能检索、智能问答"]
+        PERM_CTRL["权限管控模块<br/>RBAC用户权限管理"]
+    end
+
+    %% 外部服务层
+    subgraph "外部服务层"
+        direction TB
+        GOV_DATA["政务数据服务<br/>政策数据同步、增量更新"]
+        AI_SERVICE["AI智能服务<br/>语义解析、自然语言理解与生成"]
+    end
+
+    %% 前后端连接
+    UI --> FE_LOGIC
+    UI --> API_ADAPT
+    FE_LOGIC --> API_ADAPT
+    API_ADAPT --> BE_LOGIC
+    BE_LOGIC --> DATA_SERVICE
+    BE_LOGIC --> PERM_CTRL
+
+    %% 后端与外部服务连接
+    BE_LOGIC --> GOV_DATA
+    BE_LOGIC --> AI_SERVICE
+
+    %% 配色
+    style UI fill:#e1f5fe
+    style FE_LOGIC fill:#e1f5fe
+    style API_ADAPT fill:#e1f5fe
+    style DATA_SERVICE fill:#e8f5e8
+    style BE_LOGIC fill:#e8f5e8
+    style PERM_CTRL fill:#e8f5e8
+    style GOV_DATA fill:#fff3e0
+    style AI_SERVICE fill:#fff3e0

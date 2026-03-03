@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统架构图 - 软著专用版</title>
+    
+    <!-- 引入 Inter 字体以契合 shadcn/ui 风格 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 引入 html2canvas 用于高清导出 -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    
+    <!-- 引入 Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans:['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc; /* 极浅的石板灰，突出中心卡片 */
+        }
+        /* 美化 Mermaid 内部的 SVG 文本展示 */
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-6 md:p-12 flex flex-col items-center justify-center font-sans antialiased">
+
+    <!-- 顶部控制栏 (shadcn 风格) -->
+    <div class="w-full max-w-5xl mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900">系统架构图</h1>
+            <p class="text-sm text-slate-500 mt-1">适用于软件著作权申请文档，采用 shadcn/ui 极简风格呈现。</p>
+        </div>
+        <div class="flex gap-3">
+            <!-- 导出 SVG 按钮 (Secondary Button) -->
+            <button onclick="downloadSVG()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 h-10 px-4 py-2 text-slate-700 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                导出 SVG
+            </button>
+            
+            <!-- 导出 PNG 按钮 (Primary Button) -->
+            <button onclick="downloadPNG()" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-slate-900 text-white hover:bg-slate-900/90 h-10 px-4 py-2 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                导出高清 PNG
+            </button>
+        </div>
+    </div>
+
+    <!-- 架构图展示区 (shadcn Card) -->
+    <div id="diagram-container" class="w-full max-w-5xl rounded-xl border border-slate-200 bg-white text-slate-950 shadow-sm overflow-hidden">
+        <!-- 为了保证导出的 PNG 带有纯白背景且内边距美观，增加一个导出专用包裹层 -->
+        <div id="export-wrapper" class="p-8 bg-white flex justify-center">
+            
+            <!-- Mermaid 源码区域 -->
+            <div class="mermaid text-center">
+                flowchart TB
+                    %% 基础节点样式定义 (shadcn 色板)
+                    classDef frontNode fill:#f0f9ff,stroke:#bae6fd,stroke-width:1.5px,color:#0c4a6e,rx:8,ry:8
+                    classDef backNode fill:#f0fdf4,stroke:#bbf7d0,stroke-width:1.5px,color:#14532d,rx:8,ry:8
+                    classDef extNode fill:#fffbeb,stroke:#fde68a,stroke-width:1.5px,color:#78350f,rx:8,ry:8
+                    
+                    %% 前端层
+                    subgraph Frontend ["前端层 - 微信小程序 / uni-app"]
+                        direction TB
+                        UI["交互展示模块<br/>政策检索、智能问答、分类展示"]:::frontNode
+                        FE_LOGIC["业务逻辑模块<br/>检索解析、问答管理、操作记录"]:::frontNode
+                        API_ADAPT["接口适配模块<br/>请求封装、响应解析、异常处理"]:::frontNode
+                    end
+                    
+                    %% 后端层
+                    subgraph Backend ["后端层 - Supabase BaaS"]
+                        direction TB
+                        DATA_SERVICE["数据服务模块<br/>政策数据、用户数据、日志管理"]:::backNode
+                        BE_LOGIC["业务逻辑模块<br/>政策管理、智能检索、智能问答"]:::backNode
+                        PERM_CTRL["权限管控模块<br/>RBAC用户权限管理"]:::backNode
+                    end
+                    
+                    %% 外部服务层
+                    subgraph External["外部服务层"]
+                        direction TB
+                        GOV_DATA["政务数据服务<br/>政策数据同步、增量更新"]:::extNode
+                        AI_SERVICE["AI智能服务<br/>语义解析、自然语言理解与生成"]:::extNode
+                    end
+                    
+                    %% 前后端连接
+                    UI --> FE_LOGIC
+                    UI --> API_ADAPT
+                    FE_LOGIC --> API_ADAPT
+                    API_ADAPT --> BE_LOGIC
+                    BE_LOGIC --> DATA_SERVICE
+                    BE_LOGIC --> PERM_CTRL
+                    
+                    %% 后端与外部服务连接
+                    BE_LOGIC --> GOV_DATA
+                    BE_LOGIC --> AI_SERVICE
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Mermaid 的高雅极简样式
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, sans-serif',
+                clusterBkg: '#f8fafc',      // 浅灰背景 (slate-50)
+                clusterBorder: '#e2e8f0',   // 边框色 (slate-200)
+                lineColor: '#94a3b8',       // 连线颜色 (slate-400)
+                primaryTextColor: '#0f172a',// 主文本颜色
+                fontSize: '14px',
+            },
+            flowchart: {
+                curve: 'basis', // 使用 basis 曲线让连线更加圆滑现代
+                htmlLabels: true
+            }
+        });
+
+        // 导出高清 PNG 功能 (使用 html2canvas)
+        function downloadPNG() {
+            const wrapper = document.getElementById('export-wrapper');
+            const originalTransform = wrapper.style.transform;
+            
+            // 为了软著申请的清晰度要求，设置 3 倍缩放
+            html2canvas(wrapper, {
+                scale: 3, 
+                backgroundColor: '#ffffff', // 强制纯白背景
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '系统架构图_软著版.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            }).catch(err => {
+                console.error('导出 PNG 失败:', err);
+                alert('导出失败，请稍后重试');
+            });
+        }
+
+        // 导出无损 SVG 功能
+        function downloadSVG() {
+            const svgElement = document.querySelector('.mermaid svg');
+            if (!svgElement) {
+                alert('未找到图表内容');
+                return;
+            }
+            
+            // 获取 SVG 源码并加上命名空间
+            let svgData = new XMLSerializer().serializeToString(svgElement);
+            if (!svgData.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+                svgData = svgData.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+
+            const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = '系统架构图_矢量图.svg';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

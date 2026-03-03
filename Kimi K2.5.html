@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件系统架构图 - 软著文档</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #fafafa;
+        }
+        .mermaid {
+            background: transparent !important;
+        }
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+            font-family: 'Inter', system-ui, sans-serif !important;
+        }
+        /* Shadcn-style button hover effect */
+        .btn-primary {
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        /* Card styling matching shadcn */
+        .shadcn-card {
+            background: white;
+            border: 1px solid #e4e4e7;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+        }
+        /* Smooth transitions */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 text-zinc-900">
+
+    <div class="max-w-6xl mx-auto space-y-6 fade-in">
+        
+        <!-- Header Section -->
+        <div class="shadcn-card rounded-lg p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-zinc-900 mb-2">
+                        软件系统架构图
+                    </h1>
+                    <p class="text-zinc-500 text-sm md:text-base">
+                        基于微信小程序/uni-app + Supabase BaaS 的智能政务服务平台架构
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="exportArchitecture('png')" 
+                            class="btn-primary inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors 
+                                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 
+                                   disabled:pointer-events-none disabled:opacity-50 
+                                   bg-zinc-900 text-white hover:bg-zinc-800 h-10 px-4 py-2 gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" x2="12" y1="15" y2="3"/>
+                        </svg>
+                        导出 PNG
+                    </button>
+                    <button onclick="exportArchitecture('svg')" 
+                            class="btn-primary inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors 
+                                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 
+                                   border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-900 h-10 px-4 py-2 gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code">
+                            <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <path d="m9 18 3-3-3-3"/>
+                            <path d="m5 12-3 3 3 3"/>
+                        </svg>
+                        导出 SVG
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Diagram Card -->
+        <div class="shadcn-card rounded-lg p-8 md:p-12 bg-white" id="architecture-container">
+            <div class="flex justify-center items-center min-h-[600px]">
+                <div class="mermaid w-full flex justify-center">
+flowchart TB
+    %% 前端层
+    subgraph FE["前端层 - 微信小程序/uni-app"]
+        direction TB
+        UI["交互展示模块&lt;br/&gt;政策检索、智能问答、分类展示"]
+        FE_LOGIC["业务逻辑模块&lt;br/&gt;检索解析、问答管理、操作记录"]
+        API_ADAPT["接口适配模块&lt;br/&gt;请求封装、响应解析、异常处理"]
+    end
+
+    %% 后端层
+    subgraph BE["后端层 - Supabase BaaS"]
+        direction TB
+        DATA_SERVICE["数据服务模块&lt;br/&gt;政策数据、用户数据、日志管理"]
+        BE_LOGIC["业务逻辑模块&lt;br/&gt;政策管理、智能检索、智能问答"]
+        PERM_CTRL["权限管控模块&lt;br/&gt;RBAC用户权限管理"]
+    end
+
+    %% 外部服务层
+    subgraph EXT["外部服务层"]
+        direction TB
+        GOV_DATA["政务数据服务&lt;br/&gt;政策数据同步、增量更新"]
+        AI_SERVICE["AI智能服务&lt;br/&gt;语义解析、自然语言理解与生成"]
+    end
+
+    %% 前后端连接
+    UI --> FE_LOGIC
+    UI --> API_ADAPT
+    FE_LOGIC --> API_ADAPT
+    API_ADAPT --> BE_LOGIC
+    BE_LOGIC --> DATA_SERVICE
+    BE_LOGIC --> PERM_CTRL
+
+    %% 后端与外部服务连接
+    BE_LOGIC --> GOV_DATA
+    BE_LOGIC --> AI_SERVICE
+
+    %% 配色 - 使用柔和的专业色调
+    style UI fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a
+    style FE_LOGIC fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a
+    style API_ADAPT fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a
+    style FE fill:#eff6ff,stroke:#60a5fa,stroke-width:2px,stroke-dasharray: 5 5
+    
+    style DATA_SERVICE fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#14532d
+    style BE_LOGIC fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#14532d
+    style PERM_CTRL fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#14532d
+    style BE fill:#f0fdf4,stroke:#4ade80,stroke-width:2px,stroke-dasharray: 5 5
+    
+    style GOV_DATA fill:#ffedd5,stroke:#f97316,stroke-width:2px,color:#7c2d12
+    style AI_SERVICE fill:#ffedd5,stroke:#f97316,stroke-width:2px,color:#7c2d12
+    style EXT fill:#fff7ed,stroke:#fb923c,stroke-width:2px,stroke-dasharray: 5 5
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="mt-8 pt-6 border-t border-zinc-200">
+                <h3 class="text-sm font-semibold text-zinc-900 mb-4">图例说明</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded bg-blue-100 border-2 border-blue-500"></div>
+                        <span class="text-zinc-600">前端层 - 用户交互与界面展示</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded bg-green-100 border-2 border-green-500"></div>
+                        <span class="text-zinc-600">后端层 - 业务逻辑与数据管理</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded bg-orange-100 border-2 border-orange-500"></div>
+                        <span class="text-zinc-600">外部服务层 - 第三方接口服务</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Details -->
+        <div class="shadcn-card rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-zinc-900 mb-4">架构说明</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-zinc-600">
+                <div class="space-y-2">
+                    <h4 class="font-medium text-zinc-900">前端技术栈</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-2">
+                        <li>微信小程序原生框架 / uni-app 跨端开发</li>
+                        <li>模块化架构：展示层、逻辑层、适配层分离</li>
+                        <li>统一的 API 请求封装与错误处理机制</li>
+                    </ul>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-medium text-zinc-900">后端技术栈</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-2">
+                        <li>Supabase BaaS 平台即服务</li>
+                        <li>PostgreSQL 关系型数据库</li>
+                        <li>Row Level Security (RLS) 权限管控</li>
+                        <li>RESTful API 与实时订阅</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#ffffff',
+                primaryTextColor: '#18181b',
+                primaryBorderColor: '#e4e4e7',
+                lineColor: '#71717a',
+                secondaryColor: '#f4f4f5',
+                tertiaryColor: '#fafafa',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                fontSize: '14px'
+            },
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20,
+                useMaxWidth: true,
+                diagramPadding: 20
+            },
+            subgraph: {
+                padding: 15,
+                margin: 10
+            }
+        });
+
+        // 导出功能
+        async function exportArchitecture(format) {
+            const container = document.getElementById('architecture-container');
+            const btn = document.querySelector('button');
+            
+            try {
+                // 显示加载状态
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 导出中...';
+                btn.disabled = true;
+
+                if (format === 'svg') {
+                    // 导出 SVG
+                    const svgElement = document.querySelector('.mermaid svg');
+                    if (svgElement) {
+                        const svgData = new XMLSerializer().serializeToString(svgElement);
+                        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                        const url = URL.createObjectURL(svgBlob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = '软件系统架构图.svg';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }
+                } else {
+                    // 导出 PNG
+                    const canvas = await html2canvas(container, {
+                        backgroundColor: '#ffffff',
+                        scale: 2, // 高清导出
+                        useCORS: true,
+                        logging: false,
+                        windowWidth: container.scrollWidth,
+                        windowHeight: container.scrollHeight
+                    });
+                    
+                    const link = document.createElement('a');
+                    link.download = '软件系统架构图.png';
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+
+                // 成功提示
+                showToast('导出成功', 'success');
+            } catch (error) {
+                console.error('导出失败:', error);
+                showToast('导出失败，请重试', 'error');
+            } finally {
+                // 恢复按钮状态
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // Toast 提示
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-zinc-900' : 'bg-red-600';
+            toast.className = `fixed bottom-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg text-sm font-medium z-50 fade-in`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // 页面加载完成后调整图表大小
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const svg = document.querySelector('.mermaid svg');
+                if (svg) {
+                    svg.style.maxWidth = '100%';
+                    svg.style.height = 'auto';
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

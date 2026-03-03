@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软件系统架构图</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --border: #e2e6ea;
+    --text-primary: #1a1d23;
+    --text-secondary: #5a6275;
+    --text-muted: #8c94a3;
+
+    --fe-bg: #dbeafe;
+    --fe-header: #1d4ed8;
+    --fe-node: #eff6ff;
+    --fe-border: #93c5fd;
+
+    --be-bg: #dcfce7;
+    --be-header: #15803d;
+    --be-node: #f0fdf4;
+    --be-border: #86efac;
+
+    --ext-bg: #fff7ed;
+    --ext-header: #c2410c;
+    --ext-node: #fff7ed;
+    --ext-border: #fdba74;
+
+    --arrow: #64748b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+    color: var(--text-primary);
+  }
+
+  /* ── 顶部 bar ── */
+  .top-bar {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+  }
+  .page-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+  .export-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    background: var(--text-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.01em;
+    transition: opacity .15s;
+  }
+  .export-btn:hover { opacity: .82; }
+  .export-btn svg { flex-shrink: 0; }
+
+  /* ── 卡片容器 ── */
+  .card {
+    width: 100%;
+    max-width: 960px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 40px 48px 48px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  }
+
+  /* ── 图标题 ── */
+  .diagram-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .diagram-title::before,
+  .diagram-title::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background: var(--border);
+  }
+
+  /* ── 架构图主体 ── */
+  .arch {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: center;
+    position: relative;
+  }
+
+  /* 层之间连接线区域 */
+  .connector {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    position: relative;
+    z-index: 1;
+  }
+  .connector-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .v-line {
+    width: 2px;
+    height: 14px;
+    background: var(--arrow);
+    opacity: .45;
+  }
+  .arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--arrow);
+    opacity: .45;
+  }
+  .conn-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.03em;
+    position: absolute;
+    right: calc(50% - 120px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* 层 wrapper */
+  .layer {
+    width: 100%;
+    border-radius: 12px;
+    overflow: visible;
+    border: 1.5px solid;
+    position: relative;
+  }
+  .layer-fe { border-color: var(--fe-border); background: var(--fe-bg); }
+  .layer-be { border-color: var(--be-border); background: var(--be-bg); }
+  .layer-ext { border-color: var(--ext-border); background: var(--ext-bg); }
+
+  /* 层头部 */
+  .layer-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px 10px;
+  }
+  .layer-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .layer-fe .layer-dot { background: var(--fe-header); }
+  .layer-be .layer-dot { background: var(--be-header); }
+  .layer-ext .layer-dot { background: var(--ext-header); }
+
+  .layer-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .layer-fe .layer-name { color: var(--fe-header); }
+  .layer-be .layer-name { color: var(--be-header); }
+  .layer-ext .layer-name { color: var(--ext-header); }
+
+  .layer-tech {
+    font-size: 11px;
+    font-weight: 400;
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: 4px;
+    opacity: .7;
+  }
+
+  /* 节点行 */
+  .nodes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 0 16px 16px;
+  }
+
+  /* 单个节点 */
+  .node {
+    background: var(--surface);
+    border-radius: 9px;
+    padding: 14px 16px;
+    border: 1px solid;
+    position: relative;
+  }
+  .layer-fe .node { border-color: var(--fe-border); }
+  .layer-be .node { border-color: var(--be-border); }
+  .layer-ext .node { border-color: var(--ext-border); }
+
+  .node-icon {
+    font-size: 16px;
+    margin-bottom: 7px;
+    display: block;
+  }
+  .node-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+  .node-desc {
+    font-size: 10.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .node-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 3px;
+    margin-top: 5px;
+    font-weight: 500;
+    letter-spacing: .02em;
+  }
+  .layer-fe .node-tag { background: var(--fe-bg); color: var(--fe-header); }
+  .layer-be .node-tag { background: var(--be-bg); color: var(--be-header); }
+  .layer-ext .node-tag { background: var(--ext-bg); color: var(--ext-header); }
+
+  /* 节点内部流向箭头 */
+  .node-flow {
+    position: absolute;
+    top: 50%;
+    right: -13px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 2;
+  }
+  .node-flow .h-line {
+    width: 10px; height: 1.5px;
+    background: var(--arrow);
+    opacity: .35;
+  }
+  .node-flow .h-arrow {
+    width: 0; height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 5px solid var(--arrow);
+    opacity: .35;
+  }
+
+  /* 图例 */
+  .legend {
+    margin-top: 28px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .legend-swatch {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    border: 1.5px solid;
+  }
+  .legend-fe { background: var(--fe-bg); border-color: var(--fe-border); }
+  .legend-be { background: var(--be-bg); border-color: var(--be-border); }
+  .legend-ext { background: var(--ext-bg); border-color: var(--ext-border); }
+
+  /* 版权 */
+  .footer {
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: .02em;
+  }
+
+  /* ── 打印 / 导出 区域 ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .top-bar { display: none; }
+    .card { box-shadow: none; border: none; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部操作栏 -->
+<div class="top-bar">
+  <div>
+    <div class="page-title">软件系统架构图</div>
+    <div class="page-subtitle">Software Architecture Diagram · 政策智能检索与问答系统</div>
+  </div>
+  <button class="export-btn" onclick="exportPNG()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    导出为 PNG
+  </button>
+</div>
+
+<!-- 主卡片（导出目标） -->
+<div class="card" id="export-target">
+
+  <div class="diagram-title">系统架构总览</div>
+
+  <div class="arch">
+
+    <!-- ══ 前端层 ══ -->
+    <div class="layer layer-fe" style="width:100%">
+      <div class="layer-header">
+        <div class="layer-dot"></div>
+        <span class="layer-name">前端层</span>
+        <span class="layer-tech">· 微信小程序 / uni-app</span>
+      </div>
+      <div class="nodes">
+        <div class="node">
+          <span class="node-icon">🖥</span>
+          <div class="node-title">交互展示模块</div>
+          <div class="node-desc">政策检索界面、智能问答交互、分类浏览展示</div>
+          <span class="node-tag">UI Layer</span>
+          <div class="node-flow"><div class="h-line"></div><div class="h-arrow"></div></div>
+        </div>
+        <div class="node">
+          <span class="node-icon">⚙️</span>
+          <div class="node-title">业务逻辑模块</div>
+          <div class="node-desc">检索解析、问答管理、用户操作记录处理</div>
+          <span class="node-tag">Logic Layer</span>
+          <div class="node-flow"><div class="h-line"></div><div class="h-arrow"></div></div>
+        </div>
+        <div class="node">
+          <span class="node-icon">🔌</span>
+          <div class="node-title">接口适配模块</div>
+          <div class="node-desc">请求封装、响应解析、异常捕获与处理</div>
+          <span class="node-tag">Adapter</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 连接线：前端 → 后端 -->
+    <div class="connector">
+      <div class="connector-line">
+        <div class="v-line"></div>
+        <div class="v-line"></div>
+        <div class="arrow-head"></div>
+      </div>
+      <span class="conn-label">HTTPS / REST API</span>
+    </div>
+
+    <!-- ══ 后端层 ══ -->
+    <div class="layer layer-be" style="width:100%">
+      <div class="layer-header">
+        <div class="layer-dot"></div>
+        <span class="layer-name">后端层</span>
+        <span class="layer-tech">· Supabase BaaS</span>
+      </div>
+      <div class="nodes">
+        <div class="node">
+          <span class="node-icon">🗄</span>
+          <div class="node-title">数据服务模块</div>
+          <div class="node-desc">政策数据、用户数据、系统日志统一管理</div>
+          <span class="node-tag">PostgreSQL</span>
+          <div class="node-flow"><div class="h-line"></div><div class="h-arrow"></div></div>
+        </div>
+        <div class="node">
+          <span class="node-icon">🧠</span>
+          <div class="node-title">业务逻辑模块</div>
+          <div class="node-desc">政策管理、智能检索引擎、智能问答调度</div>
+          <span class="node-tag">Edge Functions</span>
+          <div class="node-flow"><div class="h-line"></div><div class="h-arrow"></div></div>
+        </div>
+        <div class="node">
+          <span class="node-icon">🔐</span>
+          <div class="node-title">权限管控模块</div>
+          <div class="node-desc">基于 RBAC 的用户角色权限分级管理</div>
+          <span class="node-tag">RLS / Auth</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 连接线：后端 → 外部 -->
+    <div class="connector">
+      <div class="connector-line">
+        <div class="v-line"></div>
+        <div class="v-line"></div>
+        <div class="arrow-head"></div>
+      </div>
+      <span class="conn-label">外部 API 调用</span>
+    </div>
+
+    <!-- ══ 外部服务层 ══ -->
+    <div class="layer layer-ext" style="width:100%">
+      <div class="layer-header">
+        <div class="layer-dot"></div>
+        <span class="layer-name">外部服务层</span>
+        <span class="layer-tech">· 第三方集成服务</span>
+      </div>
+      <div class="nodes" style="grid-template-columns: repeat(2,1fr); max-width:640px; margin:0 auto;">
+        <div class="node">
+          <span class="node-icon">🏛</span>
+          <div class="node-title">政务数据服务</div>
+          <div class="node-desc">政策数据全量同步、增量更新推送</div>
+          <span class="node-tag">Gov API</span>
+          <span class="node-tag">Webhook</span>
+        </div>
+        <div class="node">
+          <span class="node-icon">✨</span>
+          <div class="node-title">AI 智能服务</div>
+          <div class="node-desc">语义解析、自然语言理解与生成（NLU/NLG）</div>
+          <span class="node-tag">LLM</span>
+          <span class="node-tag">Embedding</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /arch -->
+
+  <!-- 图例 -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch legend-fe"></div>前端层（微信小程序 / uni-app）
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch legend-be"></div>后端层（Supabase BaaS）
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch legend-ext"></div>外部服务层
+    </div>
+  </div>
+
+</div><!-- /card -->
+
+<div class="footer">政策智能检索与问答系统 · 软件著作权登记技术文档</div>
+
+<!-- html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+async function exportPNG() {
+  const btn = document.querySelector('.export-btn');
+  const original = btn.innerHTML;
+  btn.innerHTML = '⏳ 导出中…';
+  btn.disabled = true;
+
+  try {
+    const el = document.getElementById('export-target');
+    const canvas = await html2canvas(el, {
+      scale: 3,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      logging: false
+    });
+    const link = document.createElement('a');
+    link.download = '软件系统架构图.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch(e) {
+    alert('导出失败，请尝试使用浏览器的截图功能。\n' + e.message);
+  }
+
+  btn.innerHTML = original;
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>

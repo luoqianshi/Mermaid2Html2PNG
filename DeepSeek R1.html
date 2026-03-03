@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件架构图 · 智能政策服务平台</title>
+    <!-- 使用简约风格，类似 shadcn/ui 设计系统：干净、圆角、柔和阴影、Inter字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <!-- Mermaid 核心库 (用于渲染流程图) -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <!-- html2canvas (用于导出为PNG) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f5f7;  /* 柔和背景 */
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* 主卡片 —— shadcn/ui 风格：纯白背景，圆角，细腻阴影，内边距 */
+        .architecture-card {
+            background-color: #ffffff;
+            border-radius: 1.25rem;          /* 圆润 */
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.1), 0 5px 12px -4px rgba(0, 0, 0, 0.05);
+            max-width: 1300px;
+            width: 100%;
+            padding: 2rem 1.8rem;
+            transition: all 0.2s ease;
+        }
+
+        /* 头部区域：简洁标题 + 导出按钮 */
+        .card-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 1rem;
+        }
+
+        .title-section h1 {
+            font-size: 1.7rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: #0a0a0a;
+            line-height: 1.2;
+        }
+
+        .title-section .sub {
+            font-size: 0.9rem;
+            color: #5b6877;
+            margin-top: 0.2rem;
+            font-weight: 400;
+        }
+
+        /* shadcn/ui 风格按钮 */
+        .export-btn {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 2.5rem;            /* 完全圆角 */
+            padding: 0.6rem 1.6rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1e293b;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .export-btn:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        .export-btn:active {
+            background-color: #f1f5f9;
+            transform: translateY(1px);
+        }
+
+        /* 图表容器 —— 纯白背景，内缩保证阴影不遮挡，并添加极细边框增加层次 */
+        .mermaid-wrapper {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid #f0f2f5;
+            padding: 1.2rem 0.5rem 0.8rem 0.5rem;
+            overflow-x: auto;          /* 若屏幕太小可横向滚动，但通常足够 */
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 内部图表区域（实际mermaid svg包裹于此） */
+        #chartContainer {
+            display: inline-block;
+            min-width: fit-content;
+            background: white;
+            border-radius: 0.7rem;
+        }
+
+        /* 对mermaid生成的svg进行优化：适应容器，保留清晰度 */
+        #chartContainer svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif !important;
+        }
+
+        /* 让mermaid节点中的文字更好阅读（轻微字距） */
+        .mermaid .label {
+            font-weight: 450;
+            letter-spacing: 0.01em;
+        }
+
+        /* 脚注（可选软著标注） */
+        .card-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            color: #7f8c9b;
+            font-size: 0.8rem;
+            border-top: 1px dashed #e9edf2;
+            padding-top: 1rem;
+        }
+
+        /* 确保导出时背景统一，无额外边距 */
+        .export-ready {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+<div class="architecture-card">
+    <div class="card-header">
+        <div class="title-section">
+            <h1>📐 系统架构图 · 智能政策服务平台</h1>
+            <div class="sub">基于 Supabase 的 BaaS 架构 / 三层解耦 · 适合软件著作权</div>
+        </div>
+        <button class="export-btn" id="exportPNGBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>导出为 PNG</span>
+        </button>
+    </div>
+
+    <!-- 图表区域 (wrapper 负责内边距+滚动, chartContainer 用于渲染和截图) -->
+    <div class="mermaid-wrapper">
+        <div id="chartContainer"></div>
+    </div>
+
+    <div class="card-footer">
+        ⚙️ 前端层 · 后端层 · 外部服务层 —— 配色区分功能域 (蓝/绿/橙)
+    </div>
+</div>
+
+<script>
+    (function() {
+        // 等待所有资源加载完成
+        window.addEventListener('load', function() {
+            // ---------- Mermaid 配置 ----------
+            mermaid.initialize({
+                startOnLoad: false,               // 我们手动控制渲染
+                theme: 'base',                     // 基础主题，允许节点style覆盖
+                themeVariables: {
+                    'background': '#ffffff',       // 全局背景白
+                    'primaryColor': '#f0f9ff',      // 不影响节点style
+                },
+                flowchart: {
+                    htmlLabels: true,               // 支持节点内 <br/> 换行
+                    useMaxWidth: true,               // 自适应宽度
+                    curve: 'basis',                   // 圆润曲线
+                    padding: 20,
+                },
+                securityLevel: 'loose',              // 允许style等
+                fontFamily: 'Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif',
+                altFontFamily: 'sans-serif',
+            });
+
+            // ---------- Mermaid 流程图定义 (与题目完全一致, 保留配色style) ----------
+            const graphDefinition = `flowchart TB
+    %% 前端层
+    subgraph "前端层 - 微信小程序/uni-app"
+        direction TB
+        UI["交互展示模块<br/>政策检索、智能问答、分类展示"]
+        FE_LOGIC["业务逻辑模块<br/>检索解析、问答管理、操作记录"]
+        API_ADAPT["接口适配模块<br/>请求封装、响应解析、异常处理"]
+    end
+
+    %% 后端层
+    subgraph "后端层 - Supabase BaaS"
+        direction TB
+        DATA_SERVICE["数据服务模块<br/>政策数据、用户数据、日志管理"]
+        BE_LOGIC["业务逻辑模块<br/>政策管理、智能检索、智能问答"]
+        PERM_CTRL["权限管控模块<br/>RBAC用户权限管理"]
+    end
+
+    %% 外部服务层
+    subgraph "外部服务层"
+        direction TB
+        GOV_DATA["政务数据服务<br/>政策数据同步、增量更新"]
+        AI_SERVICE["AI智能服务<br/>语义解析、自然语言理解与生成"]
+    end
+
+    %% 前后端连接
+    UI --> FE_LOGIC
+    UI --> API_ADAPT
+    FE_LOGIC --> API_ADAPT
+    API_ADAPT --> BE_LOGIC
+    BE_LOGIC --> DATA_SERVICE
+    BE_LOGIC --> PERM_CTRL
+
+    %% 后端与外部服务连接
+    BE_LOGIC --> GOV_DATA
+    BE_LOGIC --> AI_SERVICE
+
+    %% 配色 (保留原style)
+    style UI fill:#e1f5fe
+    style FE_LOGIC fill:#e1f5fe
+    style API_ADAPT fill:#e1f5fe
+    style DATA_SERVICE fill:#e8f5e8
+    style BE_LOGIC fill:#e8f5e8
+    style PERM_CTRL fill:#e8f5e8
+    style GOV_DATA fill:#fff3e0
+    style AI_SERVICE fill:#fff3e0`;
+
+            // 获取容器
+            const container = document.getElementById('chartContainer');
+            container.innerHTML = ''; // 清空占位
+
+            // 使用 mermaid.render 生成 svg (异步)
+            mermaid.render('mermaidChart', graphDefinition).then((result) => {
+                // result 包含 { svg, bindFunctions? }
+                container.innerHTML = result.svg;
+
+                // 可选：如果需要绑定交互（点击等），但本图不需要，bindFunctions 可忽略
+                if (result.bindFunctions) {
+                    result.bindFunctions(container);  // 绑定任何可能的交互（无）
+                }
+
+                // 给生成的svg添加一个类/额外属性以便样式控制 (已经自然继承)
+                // 确保所有文本换行正常
+            }).catch(err => {
+                console.error('Mermaid 渲染失败:', err);
+                container.innerHTML = '<div style="color:red; padding:2rem;">图表渲染失败，请刷新或检查控制台</div>';
+            });
+
+            // ---------- 导出功能 (html2canvas) ----------
+            document.getElementById('exportPNGBtn').addEventListener('click', function() {
+                const exportContainer = document.getElementById('chartContainer');
+                if (!exportContainer || exportContainer.children.length === 0) {
+                    alert('图表尚未渲染完成，请稍后重试');
+                    return;
+                }
+
+                // 使用 html2canvas 生成清晰图片
+                html2canvas(exportContainer, {
+                    scale: 2.2,                  // 高清输出 (适合软著印刷/保存)
+                    backgroundColor: '#ffffff',    // 保证背景纯白
+                    logging: false,
+                    allowTaint: false,
+                    useCORS: true,                 // 支持内部资源（无外部资源，但保留）
+                    windowWidth: exportContainer.scrollWidth,  // 捕获完整宽度
+                    windowHeight: exportContainer.scrollHeight,
+                }).then((canvas) => {
+                    // 创建下载链接
+                    const link = document.createElement('a');
+                    link.download = 'software-architecture.png';  // 文件名
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }).catch(error => {
+                    console.error('导出失败:', error);
+                    alert('导出失败，可尝试截图或检查控制台。');
+                });
+            });
+        }); // end load
+    })();
+</script>
+
+<!-- 额外备援：如果用户网络加载慢，显示简单提示（优雅降级） -->
+<noscript>
+    <div style="background:#f8d7da; padding:1rem;">您的浏览器未启用JavaScript，无法查看动态图表。</div>
+</noscript>
+</body>
+</html>
