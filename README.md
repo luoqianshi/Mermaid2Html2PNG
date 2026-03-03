@@ -38,6 +38,11 @@ Mermaid2Html2PNG/
 ├── GPT Free.html              # GPT 实现
 └── GPT Free.png               # GPT 实现预览
 ```
+└── GPT Free.png               # GPT 实现预览
+
+├── GLM-5.html                 # GLM-5 实现
+└── GLM-5.png                  # GLM-5 实现预览
+```
 
 ---
 
@@ -112,6 +117,7 @@ flowchart TB
 | **DeepSeek R1** | Mermaid | 库渲染 | PNG | 原生 CSS | 圆润阴影，Shadcn 风格按钮 |
 | **Gemini 3.1 Pro** | Mermaid | 库渲染 | PNG + SVG | Tailwind CSS | classDef 样式定义 |
 | **GPT Free** | 纯 SVG | 原生绘制 | PNG + SVG | Tailwind CSS | 矢量精度最高 |
+| **GLM-5** | 纯 CSS/HTML | 手工绘制 | PNG | Tailwind CSS | 图标丰富，Tailwind风格 |
 
 ---
 
@@ -240,6 +246,29 @@ flowchart TB
 
 ---
 
+### 6️⃣ GLM-5 (智谱AI)
+
+**技术方案：纯 CSS/HTML + Tailwind CSS**
+
+```
+渲染方式: 纯 CSS/HTML 布局 + Tailwind CSS
+导出实现: html2canvas
+样式特点:
+  - Tailwind CSS 原子化样式
+  - 丰富的 Lucide 图标
+  - 渐变背景和阴影效果
+  - 响应式布局设计
+```
+
+**亮点：**
+- ✅ 纯代码绘制，无 Mermaid 依赖
+- ✅ Tailwind CSS 配置扩展
+- ✅ 图标丰富，视觉效果好
+- ✅ 分层架构清晰
+
+**代码量：** 约 371 行
+
+
 ## 📊 技术方案统计
 
 ### 渲染方案分布
@@ -247,21 +276,21 @@ flowchart TB
 | 方案类型 | 模型数量 | 具体模型 |
 |---------|---------|---------|
 | Mermaid 库渲染 | 3 | Kimi, DeepSeek, Gemini |
-| 纯 CSS/HTML | 1 | Claude |
+| 纯 CSS/HTML | 2 | Claude, GLM-5 |
 | 纯 SVG 绘制 | 1 | GPT |
 
 ### 导出格式支持
 
 | 导出格式 | 支持数量 | 模型 |
 |---------|---------|------|
-| PNG 单格式 | 2 | Claude, DeepSeek |
+| PNG 单格式 | 3 | Claude, DeepSeek, GLM-5 |
 | PNG + SVG 双格式 | 3 | Kimi, Gemini, GPT |
 
 ### UI 框架选择
 
 | 框架 | 使用数量 | 模型 |
 |-----|---------|------|
-| Tailwind CSS | 3 | Kimi, Gemini, GPT |
+| Tailwind CSS | 4 | Kimi, Gemini, GPT, GLM-5 |
 | 原生 CSS | 2 | Claude, DeepSeek |
 
 ---
@@ -299,6 +328,7 @@ open "Kimi K2.5.html"
 open "DeepSeek R1.html"
 open "Gemini 3.1 Pro.html"
 open "GPT Free.html"
+open "GLM-5.html"
 ```
 ---
 
@@ -590,6 +620,8 @@ open "GPT Free.html"
 - **DeepSeek R1** by DeepSeek
 - **Gemini 3.1 Pro** by Google
 - **GPT Free** by OpenAI
+
+- **GLM-5** by 智谱AI
 
 ---
 

@@ -211,6 +211,15 @@
                             <h3 class="text-sm font-semibold text-zinc-900 uppercase tracking-wider">原始 Prompt</h3>
                             <span class="text-xs text-zinc-500">所有模型使用相同的输入提示</span>
                         </div>
+                        <button onclick="copyPrompt()" id="copy-btn" class="shadcn-btn inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 rounded-md text-xs font-medium text-zinc-700 transition-colors">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span id="copy-btn-text">复制</span>
+                        </button>
+                    </div>
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-sm font-semibold text-zinc-900 uppercase tracking-wider">原始 Prompt</h3>
+                            <span class="text-xs text-zinc-500">所有模型使用相同的输入提示</span>
+                        </div>
                     </div>
                     <div class="bg-zinc-950 rounded-lg p-4 overflow-x-auto">
                         <pre class="text-sm text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed">请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。 以下是供参考的Mermaid代码:
@@ -267,7 +276,7 @@ flowchart TB
         <!-- Summary Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 fade-in">
             <div class="shadcn-card rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-zinc-900">5</div>
+                <div class="text-2xl font-bold text-zinc-900">6</div>
                 <div class="text-sm text-zinc-500">参与模型</div>
             </div>
             <div class="shadcn-card rounded-lg p-4 text-center">
@@ -275,11 +284,11 @@ flowchart TB
                 <div class="text-sm text-zinc-500">Mermaid 方案</div>
             </div>
             <div class="shadcn-card rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-purple-600">2</div>
+                <div class="text-2xl font-bold text-purple-600">3</div>
                 <div class="text-sm text-zinc-500">纯代码方案</div>
             </div>
             <div class="shadcn-card rounded-lg p-4 text-center">
-                <div class="text-2xl font-bold text-green-600">5/5</div>
+                <div class="text-2xl font-bold text-green-600">6/6</div>
                 <div class="text-sm text-zinc-500">支持 PNG 导出</div>
             </div>
         </div>
@@ -466,6 +475,44 @@ flowchart TB
                 </div>
             </article>
 
+            <!-- GLM-5 -->
+            <article class="model-card shadcn-card rounded-xl overflow-hidden fade-in stagger-5">
+                <div class="relative overflow-hidden bg-zinc-100 aspect-[16/10]">
+                    <img src="GLM-5.png" alt="GLM-5 实现预览"
+                        class="model-card-image w-full h-full object-cover object-top">
+                    <div class="absolute top-3 left-3 flex gap-2">
+                        <span class="tag tag-purple">纯 CSS/HTML</span>
+                        <span class="tag tag-green">Tailwind</span>
+                    </div>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h3 class="text-lg font-semibold text-zinc-900">GLM-5</h3>
+                            <p class="text-sm text-zinc-500">智谱AI</p>
+                        </div>
+                        <div class="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="box" class="w-4 h-4 text-cyan-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-zinc-600 mb-4 line-clamp-2">
+                        使用纯 CSS/HTML 手工绘制架构图，未使用 Mermaid。采用Tailwind CSS构建，三层架构清晰，图标丰富，视觉效果出色。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">Tailwind CSS</span>
+                        <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">图标丰富</span>
+                        <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">纯代码绘制</span>
+                    </div>
+                    <a href="GLM-5.html"
+                        class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                        查看实现
+                    </a>
+                </div>
+            </article>
+
+            <!-- Comparison Summary Card -->
+
             <!-- Comparison Summary Card -->
             <article
                 class="shadcn-card rounded-xl overflow-hidden fade-in stagger-5 bg-gradient-to-br from-zinc-900 to-zinc-800 text-white">
@@ -484,7 +531,7 @@ flowchart TB
                         </div>
                         <div class="flex items-center justify-between py-2 border-b border-white/10">
                             <span class="text-sm text-zinc-300">纯代码绘制</span>
-                            <span class="text-sm font-medium">Claude (CSS), GPT (SVG)</span>
+                            <span class="text-sm font-medium">Claude (CSS), GPT (SVG), GLM-5 (Tailwind)</span>
                         </div>
                         <div class="flex items-center justify-between py-2 border-b border-white/10">
                             <span class="text-sm text-zinc-300">双格式导出</span>
@@ -492,7 +539,7 @@ flowchart TB
                         </div>
                         <div class="flex items-center justify-between py-2">
                             <span class="text-sm text-zinc-300">Tailwind CSS</span>
-                            <span class="text-sm font-medium">Kimi, Gemini, GPT</span>
+                            <span class="text-sm font-medium">Kimi, Gemini, GPT, GLM-5</span>
                         </div>
                     </div>
 
@@ -534,7 +581,64 @@ flowchart TB
             btnText.textContent = container.classList.contains('expanded')
                 ? '收起 Prompt'
                 : '查看原始 Prompt';
+        // Copy prompt to clipboard
+        function copyPrompt() {
+            const promptText = `请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。 以下是供参考的Mermaid代码:
+flowchart TB
+    %% 前端层
+    subgraph "前端层 - 微信小程序/uni-app"
+        direction TB
+        UI["交互展示模块<br/>政策检索、智能问答、分类展示"]
+        FE_LOGIC["业务逻辑模块<br/>检索解析、问答管理、操作记录"]
+        API_ADAPT["接口适配模块<br/>请求封装、响应解析、异常处理"]
+    end
+    %% 后端层
+    subgraph "后端层 - Supabase BaaS"
+        direction TB
+        DATA_SERVICE["数据服务模块<br/>政策数据、用户数据、日志管理"]
+        BE_LOGIC["业务逻辑模块<br/>政策管理、智能检索、智能问答"]
+        PERM_CTRL["权限管控模块<br/>RBAC用户权限管理"]
+    end
+    %% 外部服务层
+    subgraph "外部服务层"
+        direction TB
+        GOV_DATA["政务数据服务<br/>政策数据同步、增量更新"]
+        AI_SERVICE["AI智能服务<br/>语义解析、自然语言理解与生成"]
+    end
+    %% 前后端连接
+    UI --> FE_LOGIC
+    UI --> API_ADAPT
+    FE_LOGIC --> API_ADAPT
+    API_ADAPT --> BE_LOGIC
+    BE_LOGIC --> DATA_SERVICE
+    BE_LOGIC --> PERM_CTRL
+    %% 后端与外部服务连接
+    BE_LOGIC --> GOV_DATA
+    BE_LOGIC --> AI_SERVICE
+    %% 配色
+    style UI fill:#e1f5fe
+    style FE_LOGIC fill:#e1f5fe
+    style API_ADAPT fill:#e1f5fe
+    style DATA_SERVICE fill:#e8f5e8
+    style BE_LOGIC fill:#e8f5e8
+    style PERM_CTRL fill:#e8f5e8
+    style GOV_DATA fill:#fff3e0
+    style AI_SERVICE fill:#fff3e0`;
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                const copyBtnText = document.getElementById('copy-btn-text');
+                const originalText = copyBtnText.textContent;
+                copyBtnText.textContent = '已复制!';
+                setTimeout(() => {
+                    copyBtnText.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            });
         }
+
+        // Smooth scroll for anchor links
 
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
