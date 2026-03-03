@@ -194,7 +194,6 @@
                     </div>
                     <div class="bg-zinc-950 rounded-lg p-4 overflow-x-auto">
                         <pre class="text-sm text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed">请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。 以下是供参考的Mermaid代码:
-
 flowchart TB
     %% 前端层
     subgraph "前端层 - 微信小程序/uni-app"
@@ -203,7 +202,6 @@ flowchart TB
         FE_LOGIC["业务逻辑模块&lt;br/&gt;检索解析、问答管理、操作记录"]
         API_ADAPT["接口适配模块&lt;br/&gt;请求封装、响应解析、异常处理"]
     end
-
     %% 后端层
     subgraph "后端层 - Supabase BaaS"
         direction TB
@@ -211,14 +209,12 @@ flowchart TB
         BE_LOGIC["业务逻辑模块&lt;br/&gt;政策管理、智能检索、智能问答"]
         PERM_CTRL["权限管控模块&lt;br/&gt;RBAC用户权限管理"]
     end
-
     %% 外部服务层
     subgraph "外部服务层"
         direction TB
         GOV_DATA["政务数据服务&lt;br/&gt;政策数据同步、增量更新"]
         AI_SERVICE["AI智能服务&lt;br/&gt;语义解析、自然语言理解与生成"]
     end
-
     %% 前后端连接
     UI --> FE_LOGIC
     UI --> API_ADAPT
@@ -226,11 +222,9 @@ flowchart TB
     API_ADAPT --> BE_LOGIC
     BE_LOGIC --> DATA_SERVICE
     BE_LOGIC --> PERM_CTRL
-
     %% 后端与外部服务连接
     BE_LOGIC --> GOV_DATA
     BE_LOGIC --> AI_SERVICE
-
     %% 配色
     style UI fill:#e1f5fe
     style FE_LOGIC fill:#e1f5fe
