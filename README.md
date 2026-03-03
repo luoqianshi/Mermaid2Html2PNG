@@ -1,10 +1,10 @@
 # AI 模型效果横比 - Mermaid 转 PNG 工具实现
 
-> 同一 Prompt 下，5 大 AI 模型的代码生成能力对比实验
+> 同一 Prompt 下，6 大 AI 模型的代码生成能力对比实验
 
-## 📋 项目概述
+## 项目概述
 
-本项目是一个**AI 模型代码生成能力横向对比实验**，通过向 5 个主流 AI 模型提供**完全相同的 Prompt**，要求它们生成一个**Shadcn/ui 风格的单 HTML 页面**，实现将 Mermaid 架构图转换为可导出 PNG 的功能。
+本项目是一个 **AI 模型代码生成能力横向对比实验**，通过向 6 个主流 AI 模型提供**完全相同的 Prompt**，要求它们生成一个 **Shadcn/ui 风格的单 HTML 页面**，实现将 Mermaid 架构图转换为可导出 PNG 的功能。
 
 ### 实验目标
 
@@ -13,9 +13,7 @@
 - **分析实现思路和工程能力**
 - **为技术选型提供参考依据**
 
----
-
-## 🗂️ 目录结构
+## 目录结构
 
 ```
 Mermaid2Html2PNG/
@@ -26,34 +24,29 @@ Mermaid2Html2PNG/
 ├── Claude Sonnet 4.6.html     # Claude 实现
 ├── Claude Sonnet 4.6.png      # Claude 实现预览
 │
-├── Kimi K2.5.html             # Kimi 实现
-├── KIMI k2.5.png              # Kimi 实现预览
+├── Kimi K2.5.html            # Kimi 实现
+├── KIMI k2.5.png             # Kimi 实现预览
 │
-├── DeepSeek R1.html           # DeepSeek 实现
-├── DeepSeek R1.png            # DeepSeek 实现预览
+├── DeepSeek R1.html          # DeepSeek 实现
+├── DeepSeek R1.png           # DeepSeek 实现预览
 │
-├── Gemini 3.1 Pro.html        # Gemini 实现
-├── Gemini 3.1 Pro.png         # Gemini 实现预览
+├── Gemini 3.1 Pro.html       # Gemini 实现
+├── Gemini 3.1 Pro.png        # Gemini 实现预览
 │
-├── GPT Free.html              # GPT 实现
-└── GPT Free.png               # GPT 实现预览
-```
-└── GPT Free.png               # GPT 实现预览
-
-├── GLM-5.html                 # GLM-5 实现
-└── GLM-5.png                  # GLM-5 实现预览
+├── GPT Free.html             # GPT 实现
+├── GPT Free.png              # GPT 实现预览
+│
+├── GLM-5.html                # GLM-5 实现
+└── GLM-5.png                 # GLM-5 实现预览
 ```
 
----
-
-## 🎯 原始 Prompt
+## 原始 Prompt
 
 <details>
 <summary>点击展开完整 Prompt（所有模型使用相同的输入）</summary>
 
 ```
-请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的
-shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。
+请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。
 
 以下是供参考的Mermaid代码:
 
@@ -106,9 +99,7 @@ flowchart TB
 
 </details>
 
----
-
-## 🏆 模型实现对比总览
+## 模型实现对比总览
 
 | 模型 | 技术方案 | 渲染方式 | 导出格式 | UI 框架 | 特点 |
 |------|---------|---------|---------|---------|------|
@@ -119,183 +110,7 @@ flowchart TB
 | **GPT Free** | 纯 SVG | 原生绘制 | PNG + SVG | Tailwind CSS | 矢量精度最高 |
 | **GLM-5** | 纯 CSS/HTML | 手工绘制 | PNG | Tailwind CSS | 图标丰富，Tailwind风格 |
 
----
-
-## 🔍 详细技术分析
-
-### 1️⃣ Claude Sonnet 4.6 (Anthropic)
-
-**技术方案：纯 CSS/HTML 手工绘制**
-
-```
-渲染方式: 纯 CSS 布局 + HTML 结构
-导出实现: html2canvas
-样式特点: 
-  - 精致的分层卡片设计
-  - 手工配色（蓝/绿/橙三层）
-  - 细腻的间距和排版
-  - 流向箭头指示
-```
-
-**亮点：**
-- ✅ 唯一完全不用 Mermaid 的实现
-- ✅ 视觉效果最精致，专业感强
-- ✅ 分层色彩设计清晰
-- ✅ 自定义图例说明
-
-**代码量：** 约 519 行
-
----
-
-### 2️⃣ Kimi K2.5 (Moonshot AI)
-
-**技术方案：Mermaid + Tailwind CSS**
-
-```
-渲染方式: Mermaid 10 库渲染
-导出实现: 
-  - PNG: html2canvas
-  - SVG: 原生序列化
-样式特点:
-  - Tailwind CSS 组件化
-  - Shadcn 风格卡片
-  - 详细的架构说明区域
-```
-
-**亮点：**
-- ✅ 双格式导出（PNG + SVG）
-- ✅ 完整的图例说明
-- ✅ 响应式设计
-- ✅ 架构技术栈说明
-
-**代码量：** 约 309 行
-
----
-
-### 3️⃣ DeepSeek R1 (DeepSeek)
-
-**技术方案：Mermaid + 原生 CSS**
-
-```
-渲染方式: Mermaid 10.9.1 库渲染
-导出实现: html2canvas
-样式特点:
-  - 圆润的圆角设计（1.25rem）
-  - 细腻的阴影效果
-  - Inter 字体
-  - Shadcn 风格按钮（圆角 pill 形状）
-```
-
-**亮点：**
-- ✅ 最接近 Shadcn/ui 视觉风格
-- ✅ 按钮交互细腻（hover/active 状态）
-- ✅ 卡片阴影层次分明
-- ✅ 完全圆角的按钮设计
-
-**代码量：** 约 299 行
-
----
-
-### 4️⃣ Gemini 3.1 Pro (Google)
-
-**技术方案：Mermaid + Tailwind CSS**
-
-```
-渲染方式: Mermaid 10.8.0 库渲染
-导出实现:
-  - PNG: html2canvas
-  - SVG: 原生序列化
-样式特点:
-  - classDef 定义节点样式
-  - Tailwind 配置扩展
-  - 详细的主题变量配置
-```
-
-**亮点：**
-- ✅ 使用 Mermaid classDef 定义样式
-- ✅ 详细的 themeVariables 配置
-- ✅ 双格式导出
-- ✅ 高清导出支持
-
-**代码量：** 约 188 行
-
----
-
-### 5️⃣ GPT Free (OpenAI)
-
-**技术方案：纯 SVG + Tailwind CSS**
-
-```
-渲染方式: 原生 SVG 元素绘制
-导出实现:
-  - PNG: Canvas 绘制
-  - SVG: 原生序列化
-样式特点:
-  - 纯 SVG 实现（rect, text, line）
-  - 无 Mermaid 依赖
-  - 矢量精度最高
-```
-
-**亮点：**
-- ✅ 完全自主的 SVG 绘制
-- ✅ 矢量图无损缩放
-- ✅ 双格式导出
-- ✅ 代码结构清晰
-
-**代码量：** 约 188 行
-
----
-
-### 6️⃣ GLM-5 (智谱AI)
-
-**技术方案：纯 CSS/HTML + Tailwind CSS**
-
-```
-渲染方式: 纯 CSS/HTML 布局 + Tailwind CSS
-导出实现: html2canvas
-样式特点:
-  - Tailwind CSS 原子化样式
-  - 丰富的 Lucide 图标
-  - 渐变背景和阴影效果
-  - 响应式布局设计
-```
-
-**亮点：**
-- ✅ 纯代码绘制，无 Mermaid 依赖
-- ✅ Tailwind CSS 配置扩展
-- ✅ 图标丰富，视觉效果好
-- ✅ 分层架构清晰
-
-**代码量：** 约 371 行
-
-
-## 📊 技术方案统计
-
-### 渲染方案分布
-
-| 方案类型 | 模型数量 | 具体模型 |
-|---------|---------|---------|
-| Mermaid 库渲染 | 3 | Kimi, DeepSeek, Gemini |
-| 纯 CSS/HTML | 2 | Claude, GLM-5 |
-| 纯 SVG 绘制 | 1 | GPT |
-
-### 导出格式支持
-
-| 导出格式 | 支持数量 | 模型 |
-|---------|---------|------|
-| PNG 单格式 | 3 | Claude, DeepSeek, GLM-5 |
-| PNG + SVG 双格式 | 3 | Kimi, Gemini, GPT |
-
-### UI 框架选择
-
-| 框架 | 使用数量 | 模型 |
-|-----|---------|------|
-| Tailwind CSS | 4 | Kimi, Gemini, GPT, GLM-5 |
-| 原生 CSS | 2 | Claude, DeepSeek |
-
----
-
-## 🚀 快速开始
+## 快速开始
 
 ### 方式一：直接打开（推荐）
 
@@ -330,245 +145,50 @@ open "Gemini 3.1 Pro.html"
 open "GPT Free.html"
 open "GLM-5.html"
 ```
----
 
-## ✨ 功能特性
+## 功能特性
 
 ### 1. 对比展示主页 (index.html)
 
-- **📊 模型卡片展示**：5 个 AI 模型的实现效果对比，包含预览图、技术标签、功能描述
-- **📝 Prompt 一键复制**：展开原始 Prompt 区域后，点击"复制"按钮即可复制完整 Prompt 到剪贴板
-- **📈 技术方案深度分析**：统计图表展示渲染方案分布、导出能力、UI 框架选择等
-- **🔗 快速跳转**：点击任意卡片的"查看实现"按钮，直接进入对应模型页面
-- **🎨 Shadcn/ui 风格**：统一使用 Tailwind CSS + Inter 字体，简约现代的设计语言
+- **模型卡片展示**：6 个 AI 模型的实现效果对比，包含预览图、技术标签、功能描述
+- **Prompt 一键复制**：展开原始 Prompt 区域后，点击"复制"按钮即可复制完整 Prompt 到剪贴板
+- **技术方案深度分析**：统计图表展示渲染方案分布、导出能力、UI 框架选择等
+- **快速跳转**：点击任意卡片的"查看实现"按钮，直接进入对应模型页面
+- **Shadcn/ui 风格**：统一使用 Tailwind CSS + Inter 字体，简约现代的设计语言
 
 ### 2. 各模型实现页面
 
 每个模型页面均包含：
-- **↩️ 返回首页按钮**：固定在右上角，支持一键返回对比主页
-- **💾 导出功能**：支持 PNG 导出，部分模型支持 SVG 导出
-- **📐 架构图渲染**：Mermaid 渲染或原生绘制的高清架构图
-- **📱 响应式设计**：适配桌面端和移动端浏览
+- **返回首页按钮**：固定在右上角，支持一键返回对比主页
+- **导出功能**：支持 PNG 导出，部分模型支持 SVG 导出
+- **架构图渲染**：Mermaid 渲染或原生绘制的高清架构图
+- **响应式设计**：适配桌面端和移动端浏览
 
----
+## 技术方案统计
 
-## 🚀 快速开始
+### 渲染方案分布
 
-### 方式一：直接打开（推荐）
+| 方案类型 | 模型数量 | 具体模型 |
+|---------|---------|---------|
+| Mermaid 库渲染 | 3 | Kimi, DeepSeek, Gemini |
+| 纯 CSS/HTML | 2 | Claude, GLM-5 |
+| 纯 SVG 绘制 | 1 | GPT |
 
-1. 双击 `index.html` 查看对比展示页面
-2. 点击右上角 **"查看原始 Prompt"** 按钮展开 Prompt
-3. 点击 **"复制"** 按钮可一键复制完整 Prompt
-4. 点击任意模型卡片的 **"查看实现"** 按钮跳转详情页
-5. 在模型详情页点击右上角 **"返回首页"** 返回
+### 导出格式支持
 
-### 方式二：本地服务器
+| 导出格式 | 支持数量 | 模型 |
+|---------|---------|------|
+| PNG 单格式 | 3 | Claude, DeepSeek, GLM-5 |
+| PNG + SVG 双格式 | 3 | Kimi, Gemini, GPT |
 
-```bash
-# 进入项目目录
-cd Mermaid2Html2PNG
+### UI 框架选择
 
-# 启动本地服务器（Python）
-python -m http.server 8080
+| 框架 | 使用数量 | 模型 |
+|-----|---------|------|
+| Tailwind CSS | 4 | Kimi, Gemini, GPT, GLM-5 |
+| 原生 CSS | 2 | Claude, DeepSeek |
 
-# 或 Node.js
-npx serve .
-
-# 浏览器访问
-open http://localhost:8080/index.html
-```
-
-### 方式三：单独查看模型实现
-
-直接打开任意 HTML 文件：
-
-```bash
-open "Claude Sonnet 4.6.html"
-open "Kimi K2.5.html"
-open "DeepSeek R1.html"
-open "Gemini 3.1 Pro.html"
-open "GPT Free.html"
-```
----
----
-
-## ✨ 功能特性
-
-### 1. 对比展示主页 (index.html)
-
-- **📊 模型卡片展示**：5 个 AI 模型的实现效果对比，包含预览图、技术标签、功能描述
-- **📝 Prompt 一键复制**：展开原始 Prompt 区域后，点击"复制"按钮即可复制完整 Prompt 到剪贴板
-- **📈 技术方案深度分析**：统计图表展示渲染方案分布、导出能力、UI 框架选择等
-- **🔗 快速跳转**：点击任意卡片的"查看实现"按钮，直接进入对应模型页面
-- **🎨 Shadcn/ui 风格**：统一使用 Tailwind CSS + Inter 字体，简约现代的设计语言
-
-### 2. 各模型实现页面
-
-每个模型页面均包含：
-- **↩️ 返回首页按钮**：固定在右上角，支持一键返回对比主页
-- **💾 导出功能**：支持 PNG 导出，部分模型支持 SVG 导出
-- **📐 架构图渲染**：Mermaid 渲染或原生绘制的高清架构图
-- **📱 响应式设计**：适配桌面端和移动端浏览
-
----
-
-## 🚀 快速开始
-
-### 方式一：直接打开（推荐）
-
-1. 双击 `index.html` 查看对比展示页面
-2. 点击右上角 **"查看原始 Prompt"** 按钮展开 Prompt
-3. 点击 **"复制"** 按钮可一键复制完整 Prompt
-4. 点击任意模型卡片的 **"查看实现"** 按钮跳转详情页
-5. 在模型详情页点击右上角 **"返回首页"** 返回
-
-### 方式二：本地服务器
-
-```bash
-# 进入项目目录
-cd Mermaid2Html2PNG
-
-# 启动本地服务器（Python）
-python -m http.server 8080
-
-# 或 Node.js
-npx serve .
-
-# 浏览器访问
-open http://localhost:8080/index.html
-```
-
-### 方式三：单独查看模型实现
-
-直接打开任意 HTML 文件：
-
-```bash
-open "Claude Sonnet 4.6.html"
-open "Kimi K2.5.html"
-open "DeepSeek R1.html"
-open "Gemini 3.1 Pro.html"
-open "GPT Free.html"
-```
-
----
-
-## 🚀 快速开始
-
-### 方式一：直接打开（推荐）
-
-1. 双击 `index.html` 查看对比展示页面
-2. 点击任意模型卡片的 **"查看实现"** 按钮跳转
-
-### 方式二：本地服务器
-
-```bash
-# 进入项目目录
-cd Mermaid2Html2PNG
-
-# 启动本地服务器（Python）
-python -m http.server 8080
-
-# 或 Node.js
-npx serve .
-
-# 浏览器访问
-open http://localhost:8080/index.html
-```
-
-### 方式三：单独查看模型实现
-
-直接打开任意 HTML 文件：
-
-```bash
-open "Claude Sonnet 4.6.html"
-open "Kimi K2.5.html"
-open "DeepSeek R1.html"
-open "Gemini 3.1 Pro.html"
-open "GPT Free.html"
-```
-
----
-
-## 💡 关键发现与洞察
-
-### 1. 对 "Shadcn/ui 风格" 的理解差异
-
-| 模型 | 理解方式 |
-|------|---------|
-| Claude | 视觉风格模仿（卡片、阴影、配色）|
-| Kimi | 组件化设计 + Tailwind |
-| DeepSeek | 完全还原（圆角、按钮、阴影）|
-| Gemini | Tailwind 配置扩展 |
-| GPT | 简约布局 |
-
-### 2. 技术选型偏好
-
-- **保守派**：Claude, DeepSeek（原生技术，精细控制）
-- **现代派**：Kimi, Gemini, GPT（Tailwind CSS，快速开发）
-- **务实派**：Kimi, Gemini, DeepSeek（Mermaid，快速渲染）
-- **精工派**：Claude, GPT（手工绘制，最高质量）
-
-### 3. 导出功能实现
-
-所有模型都成功实现了 PNG 导出功能：
-- **html2canvas**（4个模型使用）：Claude, Kimi, DeepSeek, Gemini
-- **原生 Canvas API**（1个模型使用）：GPT
-
-### 4. 代码效率
-
-| 指标 | 最优模型 |
-|------|---------|
-| 代码最精简 | Gemini, GPT (188 行) |
-| 功能最完整 | Kimi (双导出 + 文档) |
-| 视觉效果最佳 | Claude |
-| 风格还原度最高 | DeepSeek |
-
----
-
-## 🎨 设计系统对比
-
-### 色彩方案
-
-| 模型 | 前端层 | 后端层 | 外部层 |
-|------|--------|--------|--------|
-| Claude | #dbeafe (蓝) | #dcfce7 (绿) | #fff7ed (橙) |
-| Kimi | #dbeafe (蓝) | #dcfce7 (绿) | #ffedd5 (橙) |
-| DeepSeek | #eff6ff (浅蓝) | - | - |
-| Gemini | #f0f9ff (蓝) | #f0fdf4 (绿) | #fffbeb (黄) |
-| GPT | #e1f5fe (蓝) | #e8f5e8 (绿) | #fff3e0 (橙) |
-
-### 字体选择
-
-- **Claude**: Noto Sans SC + JetBrains Mono
-- **Kimi**: Inter
-- **DeepSeek**: Inter
-- **Gemini**: Inter
-- **GPT**: system-ui (默认)
-
----
-
-## 📈 实验结论
-
-### 综合评分（主观）
-
-| 维度 | Claude | Kimi | DeepSeek | Gemini | GPT |
-|------|--------|------|----------|--------|-----|
-| 视觉效果 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| 代码质量 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| 功能完整 | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| 风格还原 | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
-| 工程效率 | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-
-### 最佳适用场景
-
-- **追求视觉效果**：选择 **Claude**
-- **追求功能完整**：选择 **Kimi**
-- **追求风格还原**：选择 **DeepSeek**
-- **追求开发效率**：选择 **Gemini** / **GPT**
-
----
-
-## 🛠️ 技术栈汇总
+## 技术栈汇总
 
 ### 使用的库
 
@@ -585,9 +205,7 @@ open "GPT Free.html"
 - JavaScript (ES6+)
 - SVG
 
----
-
-## 📝 使用建议
+## 使用建议
 
 ### 对于软著文档
 
@@ -603,15 +221,11 @@ open "GPT Free.html"
 2. **次选 Kimi**：功能最完整，适合需要 SVG 的场景
 3. **备选 DeepSeek**：风格还原度最高，Shadcn 生态友好
 
----
-
-## 📜 许可证
+## 许可证
 
 本项目用于 AI 模型能力对比研究，各模型生成的代码归相应模型服务提供商所有。
 
----
-
-## 🙏 致谢
+## 致谢
 
 感谢以下 AI 模型参与本次对比实验：
 
@@ -620,17 +234,7 @@ open "GPT Free.html"
 - **DeepSeek R1** by DeepSeek
 - **Gemini 3.1 Pro** by Google
 - **GPT Free** by OpenAI
-
 - **GLM-5** by 智谱AI
-
----
-
-## 📞 联系
-
-如有问题或建议，欢迎通过以下方式联系：
-
-- 项目地址：`Mermaid2Html2PNG/`
-- 创建时间：2025年3月
 
 ---
 

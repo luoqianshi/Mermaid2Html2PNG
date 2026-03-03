@@ -581,6 +581,7 @@ flowchart TB
             btnText.textContent = container.classList.contains('expanded')
                 ? '收起 Prompt'
                 : '查看原始 Prompt';
+        }
         // Copy prompt to clipboard
         function copyPrompt() {
             const promptText = `请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。 以下是供参考的Mermaid代码:
@@ -637,9 +638,6 @@ flowchart TB
                 alert('复制失败，请手动复制');
             });
         }
-
-        // Smooth scroll for anchor links
-
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
