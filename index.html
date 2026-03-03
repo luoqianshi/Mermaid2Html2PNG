@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 模型效果横比 - Mermaid 转 PNG 工具实现</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -58,52 +59,52 @@
             }
         }
     </script>
-    
+
     <style>
         body {
             background-color: #fafafa;
             font-feature-settings: "rlig" 1, "calt" 1;
         }
-        
+
         .shadcn-card {
             background: white;
             border: 1px solid #e4e4e7;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
         }
-        
+
         .shadcn-card:hover {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
-        
+
         .shadcn-btn {
             transition: all 0.15s ease;
         }
-        
+
         .shadcn-btn:active {
             transform: scale(0.98);
         }
-        
+
         .prompt-container {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease, opacity 0.3s ease;
             opacity: 0;
         }
-        
+
         .prompt-container.expanded {
-            max-height: 600px;
+            max-height: 2000px;
             opacity: 1;
         }
-        
+
         .model-card-image {
             transition: transform 0.3s ease;
         }
-        
+
         .model-card:hover .model-card-image {
             transform: scale(1.02);
         }
-        
+
         .tag {
             display: inline-flex;
             align-items: center;
@@ -112,58 +113,74 @@
             font-size: 0.75rem;
             font-weight: 500;
         }
-        
+
         .tag-blue {
             background-color: #dbeafe;
             color: #1e40af;
         }
-        
+
         .tag-green {
             background-color: #dcfce7;
             color: #166534;
         }
-        
+
         .tag-purple {
             background-color: #f3e8ff;
             color: #7c3aed;
         }
-        
+
         .tag-orange {
             background-color: #ffedd5;
             color: #c2410c;
         }
-        
+
         /* Smooth scroll */
         html {
             scroll-behavior: smooth;
         }
-        
+
         /* Fade in animation */
         .fade-in {
             animation: fadeIn 0.5s ease-out forwards;
             opacity: 0;
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
-        .stagger-1 { animation-delay: 0.1s; }
-        .stagger-2 { animation-delay: 0.2s; }
-        .stagger-3 { animation-delay: 0.3s; }
-        .stagger-4 { animation-delay: 0.4s; }
-        .stagger-5 { animation-delay: 0.5s; }
+
+        .stagger-1 {
+            animation-delay: 0.1s;
+        }
+
+        .stagger-2 {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-3 {
+            animation-delay: 0.3s;
+        }
+
+        .stagger-4 {
+            animation-delay: 0.4s;
+        }
+
+        .stagger-5 {
+            animation-delay: 0.5s;
+        }
     </style>
 </head>
+
 <body class="min-h-screen text-slate-900 antialiased">
-    
+
     <!-- Header Section -->
     <header class="bg-white border-b border-zinc-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -177,20 +194,23 @@
                         <p class="text-sm text-zinc-500">Mermaid 转 PNG 工具实现对比</p>
                     </div>
                 </div>
-                <button onclick="togglePrompt()" class="shadcn-btn inline-flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors">
+                <button onclick="togglePrompt()"
+                    class="shadcn-btn inline-flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-colors">
                     <i data-lucide="file-text" class="w-4 h-4"></i>
                     <span id="prompt-toggle-text">查看原始 Prompt</span>
                 </button>
             </div>
         </div>
-        
+
         <!-- Expandable Prompt Section -->
         <div id="prompt-container" class="prompt-container bg-zinc-50 border-t border-zinc-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="shadcn-card rounded-lg p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-semibold text-zinc-900 uppercase tracking-wider">原始 Prompt</h3>
-                        <span class="text-xs text-zinc-500">所有模型使用相同的输入提示</span>
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-sm font-semibold text-zinc-900 uppercase tracking-wider">原始 Prompt</h3>
+                            <span class="text-xs text-zinc-500">所有模型使用相同的输入提示</span>
+                        </div>
                     </div>
                     <div class="bg-zinc-950 rounded-lg p-4 overflow-x-auto">
                         <pre class="text-sm text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed">请你根据下方提供的Mermaid书写的系统架构图的代码帮我构建一个包含一份适合放入软著的shadcn/ui的简约风格的软件架构图的单HTML页面该页面支持导出这张软件架构图。 以下是供参考的Mermaid代码:
@@ -238,11 +258,12 @@ flowchart TB
                 </div>
             </div>
         </div>
+        </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
         <!-- Summary Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 fade-in">
             <div class="shadcn-card rounded-lg p-4 text-center">
@@ -265,13 +286,12 @@ flowchart TB
 
         <!-- Model Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            
+
             <!-- Claude Sonnet 4.6 -->
             <article class="model-card shadcn-card rounded-xl overflow-hidden fade-in stagger-1">
                 <div class="relative overflow-hidden bg-zinc-100 aspect-[16/10]">
-                    <img src="Claude Sonnet 4.6.png" 
-                         alt="Claude Sonnet 4.6 实现预览" 
-                         class="model-card-image w-full h-full object-cover object-top">
+                    <img src="Claude Sonnet 4.6.png" alt="Claude Sonnet 4.6 实现预览"
+                        class="model-card-image w-full h-full object-cover object-top">
                     <div class="absolute top-3 left-3">
                         <span class="tag tag-purple">纯 CSS/HTML</span>
                     </div>
@@ -294,8 +314,8 @@ flowchart TB
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">html2canvas</span>
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">分层色彩</span>
                     </div>
-                    <a href="Claude Sonnet 4.6.html" 
-                       class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
+                    <a href="Claude Sonnet 4.6.html"
+                        class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
                         <i data-lucide="external-link" class="w-4 h-4"></i>
                         查看实现
                     </a>
@@ -305,9 +325,8 @@ flowchart TB
             <!-- Kimi K2.5 -->
             <article class="model-card shadcn-card rounded-xl overflow-hidden fade-in stagger-2">
                 <div class="relative overflow-hidden bg-zinc-100 aspect-[16/10]">
-                    <img src="KIMI k2.5.png" 
-                         alt="Kimi K2.5 实现预览" 
-                         class="model-card-image w-full h-full object-cover object-top">
+                    <img src="KIMI k2.5.png" alt="Kimi K2.5 实现预览"
+                        class="model-card-image w-full h-full object-cover object-top">
                     <div class="absolute top-3 left-3 flex gap-2">
                         <span class="tag tag-blue">Mermaid</span>
                         <span class="tag tag-green">Tailwind</span>
@@ -331,8 +350,8 @@ flowchart TB
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">PNG/SVG</span>
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">响应式</span>
                     </div>
-                    <a href="Kimi K2.5.html" 
-                       class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
+                    <a href="Kimi K2.5.html"
+                        class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
                         <i data-lucide="external-link" class="w-4 h-4"></i>
                         查看实现
                     </a>
@@ -342,9 +361,8 @@ flowchart TB
             <!-- DeepSeek R1 -->
             <article class="model-card shadcn-card rounded-xl overflow-hidden fade-in stagger-3">
                 <div class="relative overflow-hidden bg-zinc-100 aspect-[16/10]">
-                    <img src="DeepSeek R1.png" 
-                         alt="DeepSeek R1 实现预览" 
-                         class="model-card-image w-full h-full object-cover object-top">
+                    <img src="DeepSeek R1.png" alt="DeepSeek R1 实现预览"
+                        class="model-card-image w-full h-full object-cover object-top">
                     <div class="absolute top-3 left-3 flex gap-2">
                         <span class="tag tag-blue">Mermaid</span>
                         <span class="tag tag-orange">原生 CSS</span>
@@ -368,8 +386,8 @@ flowchart TB
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">Inter 字体</span>
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">圆润设计</span>
                     </div>
-                    <a href="DeepSeek R1.html" 
-                       class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
+                    <a href="DeepSeek R1.html"
+                        class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
                         <i data-lucide="external-link" class="w-4 h-4"></i>
                         查看实现
                     </a>
@@ -379,9 +397,8 @@ flowchart TB
             <!-- Gemini 3.1 Pro -->
             <article class="model-card shadcn-card rounded-xl overflow-hidden fade-in stagger-4">
                 <div class="relative overflow-hidden bg-zinc-100 aspect-[16/10]">
-                    <img src="Gemini 3.1 Pro.png" 
-                         alt="Gemini 3.1 Pro 实现预览" 
-                         class="model-card-image w-full h-full object-cover object-top">
+                    <img src="Gemini 3.1 Pro.png" alt="Gemini 3.1 Pro 实现预览"
+                        class="model-card-image w-full h-full object-cover object-top">
                     <div class="absolute top-3 left-3 flex gap-2">
                         <span class="tag tag-blue">Mermaid</span>
                         <span class="tag tag-green">Tailwind</span>
@@ -405,8 +422,8 @@ flowchart TB
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">主题变量</span>
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">高清导出</span>
                     </div>
-                    <a href="Gemini 3.1 Pro.html" 
-                       class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
+                    <a href="Gemini 3.1 Pro.html"
+                        class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
                         <i data-lucide="external-link" class="w-4 h-4"></i>
                         查看实现
                     </a>
@@ -416,9 +433,8 @@ flowchart TB
             <!-- GPT Free -->
             <article class="model-card shadcn-card rounded-xl overflow-hidden fade-in stagger-5">
                 <div class="relative overflow-hidden bg-zinc-100 aspect-[16/10]">
-                    <img src="GPT Free.png" 
-                         alt="GPT Free 实现预览" 
-                         class="model-card-image w-full h-full object-cover object-top">
+                    <img src="GPT Free.png" alt="GPT Free 实现预览"
+                        class="model-card-image w-full h-full object-cover object-top">
                     <div class="absolute top-3 left-3 flex gap-2">
                         <span class="tag tag-purple">纯 SVG</span>
                         <span class="tag tag-green">Tailwind</span>
@@ -442,8 +458,8 @@ flowchart TB
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">PNG/SVG</span>
                         <span class="text-xs px-2 py-1 bg-zinc-100 text-zinc-600 rounded">矢量绘制</span>
                     </div>
-                    <a href="GPT Free.html" 
-                       class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
+                    <a href="GPT Free.html"
+                        class="shadcn-btn flex items-center justify-center gap-2 w-full py-2.5 bg-zinc-900 text-white rounded-lg text-sm font-medium hover:bg-zinc-800 transition-colors">
                         <i data-lucide="external-link" class="w-4 h-4"></i>
                         查看实现
                     </a>
@@ -451,7 +467,8 @@ flowchart TB
             </article>
 
             <!-- Comparison Summary Card -->
-            <article class="shadcn-card rounded-xl overflow-hidden fade-in stagger-5 bg-gradient-to-br from-zinc-900 to-zinc-800 text-white">
+            <article
+                class="shadcn-card rounded-xl overflow-hidden fade-in stagger-5 bg-gradient-to-br from-zinc-900 to-zinc-800 text-white">
                 <div class="p-5 h-full flex flex-col">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
@@ -459,7 +476,7 @@ flowchart TB
                         </div>
                         <h3 class="text-lg font-semibold">技术方案总结</h3>
                     </div>
-                    
+
                     <div class="space-y-3 flex-1">
                         <div class="flex items-center justify-between py-2 border-b border-white/10">
                             <span class="text-sm text-zinc-300">Mermaid 渲染</span>
@@ -478,7 +495,7 @@ flowchart TB
                             <span class="text-sm font-medium">Kimi, Gemini, GPT</span>
                         </div>
                     </div>
-                    
+
                     <div class="mt-4 pt-4 border-t border-white/10">
                         <p class="text-xs text-zinc-400 leading-relaxed">
                             所有模型均成功实现了 PNG 导出功能，整体视觉效果都达到了软著文档的要求标准。
@@ -486,7 +503,7 @@ flowchart TB
                     </div>
                 </div>
             </article>
-            
+
         </div>
     </main>
 
@@ -507,18 +524,18 @@ flowchart TB
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
-        
+
         // Toggle prompt visibility
         function togglePrompt() {
             const container = document.getElementById('prompt-container');
             const btnText = document.getElementById('prompt-toggle-text');
-            
+
             container.classList.toggle('expanded');
-            btnText.textContent = container.classList.contains('expanded') 
-                ? '收起 Prompt' 
+            btnText.textContent = container.classList.contains('expanded')
+                ? '收起 Prompt'
                 : '查看原始 Prompt';
         }
-        
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -534,4 +551,5 @@ flowchart TB
         });
     </script>
 </body>
+
 </html>

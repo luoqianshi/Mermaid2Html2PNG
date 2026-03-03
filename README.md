@@ -300,6 +300,162 @@ open "DeepSeek R1.html"
 open "Gemini 3.1 Pro.html"
 open "GPT Free.html"
 ```
+---
+
+## ✨ 功能特性
+
+### 1. 对比展示主页 (index.html)
+
+- **📊 模型卡片展示**：5 个 AI 模型的实现效果对比，包含预览图、技术标签、功能描述
+- **📝 Prompt 一键复制**：展开原始 Prompt 区域后，点击"复制"按钮即可复制完整 Prompt 到剪贴板
+- **📈 技术方案深度分析**：统计图表展示渲染方案分布、导出能力、UI 框架选择等
+- **🔗 快速跳转**：点击任意卡片的"查看实现"按钮，直接进入对应模型页面
+- **🎨 Shadcn/ui 风格**：统一使用 Tailwind CSS + Inter 字体，简约现代的设计语言
+
+### 2. 各模型实现页面
+
+每个模型页面均包含：
+- **↩️ 返回首页按钮**：固定在右上角，支持一键返回对比主页
+- **💾 导出功能**：支持 PNG 导出，部分模型支持 SVG 导出
+- **📐 架构图渲染**：Mermaid 渲染或原生绘制的高清架构图
+- **📱 响应式设计**：适配桌面端和移动端浏览
+
+---
+
+## 🚀 快速开始
+
+### 方式一：直接打开（推荐）
+
+1. 双击 `index.html` 查看对比展示页面
+2. 点击右上角 **"查看原始 Prompt"** 按钮展开 Prompt
+3. 点击 **"复制"** 按钮可一键复制完整 Prompt
+4. 点击任意模型卡片的 **"查看实现"** 按钮跳转详情页
+5. 在模型详情页点击右上角 **"返回首页"** 返回
+
+### 方式二：本地服务器
+
+```bash
+# 进入项目目录
+cd Mermaid2Html2PNG
+
+# 启动本地服务器（Python）
+python -m http.server 8080
+
+# 或 Node.js
+npx serve .
+
+# 浏览器访问
+open http://localhost:8080/index.html
+```
+
+### 方式三：单独查看模型实现
+
+直接打开任意 HTML 文件：
+
+```bash
+open "Claude Sonnet 4.6.html"
+open "Kimi K2.5.html"
+open "DeepSeek R1.html"
+open "Gemini 3.1 Pro.html"
+open "GPT Free.html"
+```
+---
+---
+
+## ✨ 功能特性
+
+### 1. 对比展示主页 (index.html)
+
+- **📊 模型卡片展示**：5 个 AI 模型的实现效果对比，包含预览图、技术标签、功能描述
+- **📝 Prompt 一键复制**：展开原始 Prompt 区域后，点击"复制"按钮即可复制完整 Prompt 到剪贴板
+- **📈 技术方案深度分析**：统计图表展示渲染方案分布、导出能力、UI 框架选择等
+- **🔗 快速跳转**：点击任意卡片的"查看实现"按钮，直接进入对应模型页面
+- **🎨 Shadcn/ui 风格**：统一使用 Tailwind CSS + Inter 字体，简约现代的设计语言
+
+### 2. 各模型实现页面
+
+每个模型页面均包含：
+- **↩️ 返回首页按钮**：固定在右上角，支持一键返回对比主页
+- **💾 导出功能**：支持 PNG 导出，部分模型支持 SVG 导出
+- **📐 架构图渲染**：Mermaid 渲染或原生绘制的高清架构图
+- **📱 响应式设计**：适配桌面端和移动端浏览
+
+---
+
+## 🚀 快速开始
+
+### 方式一：直接打开（推荐）
+
+1. 双击 `index.html` 查看对比展示页面
+2. 点击右上角 **"查看原始 Prompt"** 按钮展开 Prompt
+3. 点击 **"复制"** 按钮可一键复制完整 Prompt
+4. 点击任意模型卡片的 **"查看实现"** 按钮跳转详情页
+5. 在模型详情页点击右上角 **"返回首页"** 返回
+
+### 方式二：本地服务器
+
+```bash
+# 进入项目目录
+cd Mermaid2Html2PNG
+
+# 启动本地服务器（Python）
+python -m http.server 8080
+
+# 或 Node.js
+npx serve .
+
+# 浏览器访问
+open http://localhost:8080/index.html
+```
+
+### 方式三：单独查看模型实现
+
+直接打开任意 HTML 文件：
+
+```bash
+open "Claude Sonnet 4.6.html"
+open "Kimi K2.5.html"
+open "DeepSeek R1.html"
+open "Gemini 3.1 Pro.html"
+open "GPT Free.html"
+```
+
+---
+
+## 🚀 快速开始
+
+### 方式一：直接打开（推荐）
+
+1. 双击 `index.html` 查看对比展示页面
+2. 点击任意模型卡片的 **"查看实现"** 按钮跳转
+
+### 方式二：本地服务器
+
+```bash
+# 进入项目目录
+cd Mermaid2Html2PNG
+
+# 启动本地服务器（Python）
+python -m http.server 8080
+
+# 或 Node.js
+npx serve .
+
+# 浏览器访问
+open http://localhost:8080/index.html
+```
+
+### 方式三：单独查看模型实现
+
+直接打开任意 HTML 文件：
+
+```bash
+open "Claude Sonnet 4.6.html"
+open "Kimi K2.5.html"
+open "DeepSeek R1.html"
+open "Gemini 3.1 Pro.html"
+open "GPT Free.html"
+```
 
 ---
 
@@ -446,4 +602,4 @@ open "GPT Free.html"
 
 ---
 
-> 💡 **提示**：打开 `index.html` 即可查看完整的模型对比展示页面！
+> 💡 **提示**：打开 `index.html` 即可查看完整的模型对比展示页面！点击"查看原始 Prompt"可展开并一键复制完整 Prompt，点击任意模型卡片可查看详细实现，各模型页面右上角均有"返回首页"按钮。
